@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(docker compose up -d)",
+      "PowerShell(wsl --list --verbose)",
+      "PowerShell($timeout = 120; $elapsed = 0; while \\($elapsed -lt $timeout\\) { try { $result = docker info 2>$null; if \\($LASTEXITCODE -eq 0\\) { Write-Output \"Docker is ready after $elapsed seconds\"; break } } catch {} Start-Sleep -Seconds 5; $elapsed += 5; if \\($elapsed -ge $timeout\\) { Write-Output \"Timeout waiting for Docker\" } })",
+      "PowerShell(docker stop phpmyadmin-ci)",
+      "PowerShell(docker compose exec api bash -c \"composer install\")",
+      "PowerShell(docker compose exec api bash -c \"composer run phinx:migrate\")",
+      "PowerShell(docker compose exec api bash -c \"composer run phinx:seed\")",
+      "PowerShell(Invoke-RestMethod -Uri \"http://localhost:8080/companies\" -Method GET)",
+      "PowerShell(docker compose logs frontend --tail 20)"
+    ]
+  }
+}
