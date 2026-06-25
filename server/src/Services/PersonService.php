@@ -100,7 +100,7 @@ class PersonService
         }
 
         if ($query->exists()) {
-            throw new HttpConflictException('CPF already registered');
+            throw new HttpConflictException('CPF já cadastrado!');
         }
     }
 }
