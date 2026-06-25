@@ -2,9 +2,10 @@ import { useState } from 'react';
 
 import { App, Button, Popconfirm, Space } from 'antd';
 
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, TeamOutlined } from '@ant-design/icons';
 import { handleServiceError, hasServiceError } from '@domain/@shared/service.helper';
 import { sleep } from '@domain/@shared/sleep';
+import { InvolvementsModal } from '@domain/involvement/components/InvolvementsModal';
 
 import { deleteRecord } from '../api/delete-record.service';
 import type { Record } from '../record.type';
@@ -15,6 +16,7 @@ type Props = { record: Record.Model };
 export function RecordsActionsCell({ record }: Props) {
     const [isPopconfirmVisible, setIsPopconfirmVisible] = useState(false);
     const [isSending, setIsSending] = useState(false);
+    const [isInvolvementsVisible, setIsInvolvementsVisible] = useState(false);
 
     const { setRecordId, setIsEditModalVisible, fetchRecords } = useRecordsContext();
 
@@ -42,33 +44,49 @@ export function RecordsActionsCell({ record }: Props) {
     };
 
     return (
-        <Space size="middle">
-            <Button
-                type="text"
-                icon={<EditOutlined />}
-                title="Editar"
-                onClick={handleEdit}
-            />
-
-            <Popconfirm
-                title="Excluir relato"
-                description="Tem certeza que deseja excluir o relato?"
-                open={isPopconfirmVisible}
-                placement="left"
-                cancelText="Não"
-                okText="Sim"
-                okType="danger"
-                okButtonProps={{ loading: isSending }}
-                onConfirm={handleDelete}
-                onCancel={() => setIsPopconfirmVisible(false)}
-            >
+        <>
+            <Space size="middle">
                 <Button
                     type="text"
-                    icon={<DeleteOutlined />}
-                    title="Excluir"
-                    onClick={() => setIsPopconfirmVisible(true)}
+                    icon={<TeamOutlined />}
+                    title="Envolvidos"
+                    onClick={() => setIsInvolvementsVisible(true)}
                 />
-            </Popconfirm>
-        </Space>
+
+                <Button
+                    type="text"
+                    icon={<EditOutlined />}
+                    title="Editar"
+                    onClick={handleEdit}
+                />
+
+                <Popconfirm
+                    title="Excluir relato"
+                    description="Tem certeza que deseja excluir o relato?"
+                    open={isPopconfirmVisible}
+                    placement="left"
+                    cancelText="Não"
+                    okText="Sim"
+                    okType="danger"
+                    okButtonProps={{ loading: isSending }}
+                    onConfirm={handleDelete}
+                    onCancel={() => setIsPopconfirmVisible(false)}
+                >
+                    <Button
+                        type="text"
+                        icon={<DeleteOutlined />}
+                        title="Excluir"
+                        onClick={() => setIsPopconfirmVisible(true)}
+                    />
+                </Popconfirm>
+            </Space>
+
+            {isInvolvementsVisible && (
+                <InvolvementsModal
+                    recordId={record.id}
+                    onClose={() => setIsInvolvementsVisible(false)}
+                />
+            )}
+        </>
     );
 }
