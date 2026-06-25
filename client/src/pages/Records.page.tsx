@@ -5,6 +5,7 @@ import { Button, Row, type TableColumnsType, Typography } from 'antd';
 import { Show } from '@domain/@shared/Show';
 import { Table } from '@domain/@shared/Table';
 import { CompaniesContextProvider } from '@domain/company/Companies.context';
+import { AnonymousBadge } from '@domain/involvement/components/AnonymousBadge';
 import { CreateRecordModal } from '@domain/record/components/CreateRecordModal';
 import { EditRecordModal } from '@domain/record/components/EditRecordModal';
 import { RecordsActionsCell } from '@domain/record/components/RecordsActionsCell';
@@ -32,6 +33,10 @@ const COLUMNS: TableColumnsType<Record.Model> = [
         title: 'Status',
         dataIndex: 'status',
         render: value => STATUS_LABELS[value as Record.Status] ?? value,
+    },
+    {
+        title: 'Anonimato',
+        render: (_, record) => <AnonymousBadge recordId={record.id} />,
     },
     {
         render: (_, record) => <RecordsActionsCell record={record} />,
